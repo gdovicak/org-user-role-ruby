@@ -10,7 +10,7 @@ class SecurityGuard
 
     @user_roles.each do |r|
       if r.organization == organization.name
-        return 'User'
+        return r.role
       end
     end
 
