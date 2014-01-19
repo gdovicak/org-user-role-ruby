@@ -6,4 +6,6 @@ class OrgRoleMap
     @role = role
     @org_parent = parent
   end
+
+
 end
