@@ -25,7 +25,7 @@ describe SecurityGuard do
       expect(role).to eq('Admin')
     end
 
-    it "the organizations requsted's parent" do
+    it "the requsted organization's parent" do
         org_role_map = OrgRoleMap.new('Root Org', 'Admin', nil)
 
         sut = SecurityGuard.new(@user, [org_role_map])
@@ -48,8 +48,20 @@ describe SecurityGuard do
       expect(role).to eq('User')
     end
 
-    it "the organizations requsted's parent" do
-      org_role_map = OrgRoleMap.new('Root Org', 'Admin', nil)
+    it "the requsted organization's parent" do
+      org_role_map = OrgRoleMap.new('Root Org', 'User', nil)
+
+      sut = SecurityGuard.new(@user, [org_role_map])
+      role = sut.get_role_for(@organization)
+      expect(role).to eq('User')
+    end
+
+    it "the root organization" do
+      org_role_map = OrgRoleMap.new('Root Org', 'User', nil)
+
+      organization = double()
+      @organization.stub(:name) { 'Child Org 1' }
+      @organization.stub(:parent) { 'Org 1' }
 
       sut = SecurityGuard.new(@user, [org_role_map])
       role = sut.get_role_for(@organization)
