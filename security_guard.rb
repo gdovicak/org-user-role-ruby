@@ -9,33 +9,27 @@ class SecurityGuard
   def get_role_for(organization)
     role = 'Denied'
 
-    @user_roles.each do |r|
-      if r.organization == organization.name
-        role = r.role
-        break
-      end
-    end
-
-    if(role == 'Denied')
-      @user_roles.each do |r|
-        puts r.org_parent
-        if r.organization == organization.parent
-          role = r.role
-          break
-        end
-      end
-    end
-
-    if(role == 'Denied')
-      @user_roles.each do |r|
-        if r.organization == 'Root Org'
-          role = r.role
-          break
-        end
-      end
-    end
+    role = check_role_for_org(organization.name, role)
+    role = check_role_for_org(organization.parent, role)
+    role = check_role_for_org('Root Org', role)
 
     return role
   end 
+
+
+  def check_role_for_org(org_name, current_role)
+    if(current_role != 'Denied')
+      return current_role
+    end
+
+    @user_roles.each do |r|
+      if r.organization == org_name
+        return r.role
+      end
+    end
+
+    return 'Denied'
+  end
+
 end
 
